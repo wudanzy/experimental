@@ -13,21 +13,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-ThisBuild / version := "0.1.0-SNAPSHOT"
+package com.example
 
-ThisBuild / scalaVersion := "2.12.19"
+import org.apache.spark.sql.QueryTest
+import org.apache.spark.sql.test.SharedSparkSession
 
-val sparkVersion = "3.2.0"
-
-lazy val root = (project in file("."))
-  .settings(
-    name := "SimpleDataSource"
-  )
-
-libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-sql" % sparkVersion,
-  "org.scalatest" %% "scalatest" % sparkVersion % "test",
-  "org.apache.spark" %% "spark-core" % sparkVersion % "test" classifier "tests",
-  "org.apache.spark" %% "spark-catalyst" % sparkVersion % "test" classifier "tests",
-  "org.apache.spark" %% "spark-sql" % sparkVersion % "test" classifier "tests"
-)
+class SimpleSourceSuite extends QueryTest with SharedSparkSession {
+  test("built-in fixed arity expressions") {
+    val df = spark.emptyDataFrame
+    df.selectExpr("rand()", "randn()", "rand(5)", "randn(50)")
+  }
+}
