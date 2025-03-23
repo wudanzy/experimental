@@ -20,7 +20,8 @@ import org.apache.spark.sql.test.SharedSparkSession
 
 class SimpleSourceSuite extends QueryTest with SharedSparkSession {
   test("built-in fixed arity expressions") {
-    val df = spark.emptyDataFrame
-    df.selectExpr("rand()", "randn()", "rand(5)", "randn(50)")
+    val df = spark.read.format("simple").load()
+    // It contains numbers [0, 40)
+    assert(df.count() == 40)
   }
 }
